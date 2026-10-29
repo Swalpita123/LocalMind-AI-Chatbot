@@ -1,0 +1,27 @@
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+.env.*
+
+# Keep an example environment file if you have one
+!.env.example
+
+# Frontend
+node_modules/
+dist/
+
+# Local databases and uploaded documents
+chroma_db/
+chroma/
+uploads/
+*.sqlite3
+*.db
+
+# Editors and OS
+.vscode/
+.idea/
+.DS_Store
