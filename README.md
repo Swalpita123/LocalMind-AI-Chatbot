@@ -1,59 +1,136 @@
-# Local Voice RAG Assistant (No OpenAI)
+# LocalMind — AI-Powered Voice & Document Assistant
 
-React + FastAPI chatbot with LangChain, LangGraph, ChromaDB, Sentence Transformers, Ollama, faster-whisper, and pyttsx3. All inference is local.
+LocalMind is a privacy-focused AI assistant that allows users to upload documents, ask questions in natural language, and interact through voice. It combines a React frontend, FastAPI backend, and Retrieval-Augmented Generation (RAG) to provide context-aware answers from uploaded documents.
 
-## Requirements
-- Windows 10/11
-- Python 3.12 recommended
-- Node.js 20+
-- Ollama for Windows: https://ollama.com/download
-- 8 GB RAM minimum recommended; 16 GB is more comfortable.
+## Features
 
-## 1. Pull the local language model
-Install Ollama, then:
-```powershell
+- **Document Q&A:** Upload documents and ask questions about their content.
+- **RAG Pipeline:** Retrieve relevant information from documents to answer questions.
+- **Local LLM:** Generate responses using Ollama and a locally running language model.
+- **Voice Input:** Convert spoken questions into text using faster-whisper.
+- **Text-to-Speech:** Listen to AI-generated responses.
+- **Chat History:** Keep track of conversations in the interface.
+- **Modern UI:** Responsive React interface with custom CSS.
+- **Local Execution:** Run the application locally with your own models and documents.
+
+## Tech Stack
+
+- **Frontend:** React, JavaScript, CSS
+- **Backend:** Python, FastAPI
+- **AI Orchestration:** LangChain, LangGraph
+- **Vector Database:** ChromaDB
+- **Embeddings:** Sentence Transformers
+- **LLM Runtime:** Ollama
+- **Language Model:** Qwen2.5 3B
+- **Speech Recognition:** faster-whisper
+- **Text-to-Speech:** pyttsx3
+
+## Architecture
+
+1. Users upload documents through the React interface.
+2. FastAPI processes the uploaded documents.
+3. ChromaDB stores information for similarity-based retrieval.
+4. Relevant document context is retrieved when a question is asked.
+5. The language model generates a context-aware answer.
+6. Users can interact using text or voice and listen to responses.
+
+## Prerequisites
+
+- Python and pip
+- Node.js and npm
+- Git
+- Ollama
+- The language model configured for the application
+
+## Installation and Setup
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/YOUR_USERNAME/LocalMind.git
+cd LocalMind
+```
+
+Replace `YOUR_USERNAME` with your GitHub username.
+
+### 2. Configure Ollama
+
+Install Ollama from https://ollama.com/.
+
+If your application is configured to use Qwen2.5 3B, download the model:
+
+```bash
 ollama pull qwen2.5:3b
 ```
-Ollama serves locally at `http://127.0.0.1:11434`.
 
-## 2. Start backend (PowerShell)
+Ensure Ollama is running before using the assistant.
+
+### 3. Set up the backend
+
+Create a Python virtual environment:
+
 ```powershell
-cd backend
-py -3.12 -m venv .venv
+python -m venv .venv
 .\.venv\Scripts\Activate.ps1
-python -m pip install --upgrade pip
-pip install -r requirements.txt
-Copy-Item .env.example .env
-python -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
 ```
-If activation is blocked: `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass`
 
-First run downloads embedding and Whisper model files. Check `http://127.0.0.1:8000/health` and `http://127.0.0.1:8000/docs`.
+Install dependencies using your project's dependency file:
 
-## 3. Start frontend in another PowerShell window
-```powershell
-cd frontend
+```bash
+pip install -r requirements.txt
+```
+
+Start the FastAPI server:
+
+```bash
+python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
+```
+
+### 4. Set up the frontend
+
+Open another terminal in the directory containing `package.json`:
+
+```bash
 npm install
 npm run dev
 ```
-Open `http://127.0.0.1:5173`.
 
-## Use
-Upload PDF/TXT/MD, then use text chat or click the microphone for **continuous hands-free voice chat**. In continuous mode, speak naturally and pause for about 1.3 seconds when you finish a sentence. The app detects the pause, transcribes locally with faster-whisper, sends the question to the local RAG model, speaks the answer, and resumes listening automatically. Click the microphone again to end voice mode. Turn off **Speak answers** if you want continuous voice input but text-only replies. Sources show filename/page and excerpts.
+Open the local URL displayed in your terminal.
 
-### Continuous voice behavior
-- Uses browser microphone capture and local audio-level/silence detection; it does not use the browser's cloud speech-recognition API.
-- During spoken answers, automatic listening pauses to reduce the assistant hearing its own voice. It resumes after playback finishes.
-- This is a hands-free, turn-by-turn loop, not full-duplex real-time streaming. Interrupting the assistant mid-sentence is not supported in this version, and CPU inference can add noticeable delay.
+> Adjust commands if your actual backend entry point, dependency file, or frontend directory differs from these examples.
 
-## Configuration
-Edit `backend/.env`. `OLLAMA_MODEL=qwen2.5:3b`; `WHISPER_MODEL=tiny` is CPU-oriented. Set Whisper to `base` for potentially better transcription at a speed/memory cost.
+## API Endpoints
 
-## Tests
-From `backend/` with venv activated: `pytest -q`
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/health` | Check backend health |
+| POST | `/api/documents` | Upload documents |
+| POST | `/api/chat` | Submit a question and receive an answer |
+| POST | `/api/voice/transcribe` | Convert audio to text |
+| POST | `/api/voice/speak` | Generate speech from text |
 
-## Notes
-- No OpenAI SDK/API is used. Ollama, embeddings, speech recognition, and TTS run locally.
-- Setup downloads packages/models. After setup, offline use is possible if all model files are cached.
-- PDF text extraction does not OCR scanned/image-only PDFs.
-- This is a local starter, not hardened for public deployment. It uses a shared local vector collection; add authentication and per-user isolation before multi-user use.
+**Local backend URL:** `http://127.0.0.1:8000`
+
+## Security and Privacy
+
+- Do not commit API keys, passwords, or secret configuration.
+- Do not upload private documents or personal data to the repository.
+- Exclude virtual environments, downloaded model weights, and generated vector databases from Git.
+- Review `.gitignore` before pushing changes.
+- Local execution does not automatically guarantee privacy; verify which services the application sends data to.
+
+## Future Enhancements
+
+- Improve document processing and retrieval accuracy.
+- Add automated tests for backend APIs.
+- Improve voice interaction and error handling.
+- Add configurable deployment settings.
+- Introduce authentication and per-user document isolation if needed.
+
+## Contributing
+
+Suggestions and improvements are welcome. Open an issue to report a bug or discuss a feature.
+
+## License
+
+A license has not yet been specified. Add a `LICENSE` file before distributing the project as open-source software.
