@@ -47,11 +47,9 @@ LocalMind is a privacy-focused AI assistant that allows users to upload document
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/LocalMind.git
+git clone https://github.com/Swalpita123/LocalMind-AI-Chatbot.git
 cd LocalMind
 ```
-
-Replace `YOUR_USERNAME` with your GitHub username.
 
 ### 2. Configure Ollama
 
